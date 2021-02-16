@@ -30,11 +30,6 @@ function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, sp
     myVideo1 = VideoWriter(filename1, 'MPEG-4'); % open video file
     myVideo1.FrameRate = 10;  % can adjust this, 5 - 10 works well for me
     open(myVideo1)
-
-    filename2 = sprintf('data/Sideview%u', scenarioID);
-    myVideo2 = VideoWriter(filename2, 'MPEG-4'); % open video file
-    myVideo2.FrameRate = 10;  % can adjust this, 5 - 10 works well for me
-    open(myVideo2)
     
     %% Create Filaments
     
@@ -113,33 +108,9 @@ function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, sp
         clf
         hold off
         
-        %% FIGURE Visualize surface (side view)
-        
-        f2 = figure(2);
-        f2.OuterPosition = [ 1.5*plot_scrsz(3) .2*plot_scrsz(4) .6*plot_scrsz(3) .7*plot_scrsz(4)];
-        hold on, box on, grid on
-        xlim([0, maxDistance + 2*maxRadius]);
-        for n=1:BSmag.Nfilament % Plot all filaments in road in black
-            plot3(BSmag.filament(n).Gamma(:,1),BSmag.filament(n).Gamma(:,2),BSmag.filament(n).Gamma(:,3),'.-k') % plot filament
-        end
-        slice(X,Y,Z,BZ,[],[0],[]), colorbar % plot Bz at center of road coils from the sideview
-        plot3(Gamma_car(:,1),Gamma_car(:,2),Gamma_car(:,3),'.-r') % plot car filament in red
-        xlabel ('x [m]'), ylabel ('y [m]'), zlabel ('z [m]'), title ('Bz [T] Side View')
-        daspect([1,1,1])
-        view(0,0) % Show the desired side view
-        caxis(1.05*BZlimits)
-        drawnow
-        pause(.4)
-
-        frame2 = getframe(gcf); % Get frame
-        writeVideo(myVideo2, frame2); % Add frame to the video
-        clf
-        hold off
-        
     end
 
     close(myVideo1)
-    close(myVideo2)
     R_car = rho_car * L_car / A_car;
     dT = diff(time);
     inducedEMF = -turns_car*diff(flux)./dT;
