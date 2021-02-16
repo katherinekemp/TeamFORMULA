@@ -13,7 +13,7 @@ radius_car = 10; % Radius of transmitting coil [m]
 
 % Coil orientation
 height = 2; % Height of the receiving coil above the transmitting coil [m]
-spacing = 30; % distance betewen centers of [m]
+spacing = 2 * radius; % distance betewen centers of [m]
 velocity = 1; % velocity of car [m/s]
 
 %% Cost Analysis Variables
@@ -35,7 +35,7 @@ data = zeros(totalScenarios, 12); % Initialize data matrix
 format shortG % print data with the desired detail
 
 for i = 1:totalScenarios
-    scenarioID = i;
+    scenarioID = 4;
     totalCharge = DWPT(I, turns, radius, turns_car, radius_car, height, spacing, velocity, rho_car, L_car, A_car, scenarioID);
     data(i,:) = [I turns radius turns_car radius_car height spacing velocity rho_car L_car A_car totalCharge];
 end
