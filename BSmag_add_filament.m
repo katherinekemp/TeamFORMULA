@@ -29,10 +29,3 @@ BSmag.filament(n).Gamma = Gamma;
 BSmag.filament(n).I = I;
 BSmag.filament(n).dGamma = dGamma;
 BSmag.Nfilament = n;
-
-%Plot P (where there is a current source
-%figure(1);
-%plot3(Gamma(:,1),Gamma(:,2),Gamma(:,3),'.-r');
-%hold on
-%pbaspect([1,1,1])
-

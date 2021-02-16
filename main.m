@@ -35,8 +35,8 @@ format shortG
 
 for i = 1:totalScenarios
     scenarioID = i;
-    totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, spacing, velocity, rho_car, L_car, A_car, scenarioID);
+    totalCharge = DWPT(I, turns, radius, turns_car, radius_car, height, spacing, velocity, rho_car, L_car, A_car, scenarioID);
     data(i,:) = [I turns radius turns_car radius_car height spacing velocity rho_car L_car A_car totalCharge];
 end
 
-writematrix(data,'data.csv')
+writematrix(data,'data/data.csv')
