@@ -1,9 +1,31 @@
-%%
-%AUTHOR:    20150407, L. Queval (loic.queval@gmail.com)
-%COPYRIGHT: 2015, Loic Quéval, BSD License (http://opensource.org/licenses/BSD-3-Clause).
+clear all, close all, clc
 
-function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, spacing, velocity, rho_car, L_car, A_car, scenarioID) 
-    %% FORMULA Constants
+%% FORMULA variables
+
+% Transmitting coil
+I = 10; % filament current [A]
+turns = 10; % Numer of turn in the coil []
+radius = 10; % Radius of transmitting coil [m]
+
+% Receiving coil
+turns_car = 10; % Numer of turn in the coil []
+radius_car = 10; % Radius of transmitting coil [m]
+
+% Coil orientation
+height = 2; % Height of the receiving coil above the transmitting coil [m]
+spacing = 30; % distance betewen centers of [m]
+velocity = 1; % velocity of car [m/s]
+
+%% Cost Analysis Variables
+
+rho = 10; % resistivity of the wire [?]
+rho_car = 10; % resistivity of the wire [?]
+V = 1; % voltage of power source [V]
+V_car = 12; % voltage of car battery [V]
+%gauge in road
+%gauge in car
+
+%% FORMULA Constants
 
     maxDistance = 160; % distance the car will travel [m] 1600, about 1 mile
     increment = .5; % Resolution (distance between the points in meshgrid) [m] 1/50 pi/4 ~= .78375
@@ -24,14 +46,15 @@ function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, sp
     time = distance./velocity;
     totalFlux = zeros(1, length(distance)); % [C]
     BSmag = BSmag_init(); % Initialize BSmag analysis
+    rho_car = 1; % [ohms]
 
     %% Initialize video
-    
+    %{
     filename1 = sprintf('scenario%u', scenarioID);
     myVideo1 = VideoWriter(filename1); %open video file
     myVideo1.FrameRate = 10;  %can adjust this, 5 - 10 works well for me
     open(myVideo1)
-
+    %}
     %{
     filename2 = sprintf('scenario%usideview', scenarioID);
     myVideo2 = VideoWriter(filename2); %open video file
@@ -62,14 +85,19 @@ function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, sp
     y_M = linspace(-maxRadius,maxRadius,numberOfSquaresY); % y [m]
     z_M = linspace(.5*height,1.5*height,numberOfSquaresZ); % z [m]
     [X_M,Y_M,Z_M]=meshgrid(x_M,y_M,z_M);
-
-    %% Biot-Savart Integration
-    [X,Y,Z,BZ] = BSmag_get_B(BSmag,X_M,Y_M,Z_M,muRel); %% This is where the integation happens
-    BZ(abs(BZ)<1e-10) = 0; % Make tiny values equal to 0
-
+    
+    BZ = zeros(size(X_M,1),size(X_M,2),size(X_M,3));
+    for m = 1:size(X_M,1);
+        for n = 1:size(X_M,2);
+            for p = 1:size(X_M,3);
+                BZ(m,n,p) = m;
+            end
+        end
+    end
+    
     %% Simulation
     %for i=1:length(distance)
-    for i=10
+    for i=55
         %% Calculate current flux and total charge
         heightIndex = .5 + numberOfSquaresZ / 2;
         minX = distance(i) * numberOfSquaresX / maxDistance;
@@ -77,13 +105,13 @@ function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, sp
 
         for n = round(minX)+1:round(minX)+numberOfSquaresY
             yLim = sqrt(radius_car^2 - (X_M(1,n) - radius_car - distance(i))^2);
-            for m = 1:numberOfSquaresY
-                if Y_M(m,1) > -1*yLim & Y_M(m,1) < yLim
-                    flux(m, n - round(minX)) = BZ(m,n,heightIndex);
+            for n = 1:numberOfSquaresY
+                if Y_M(m,1) > -1*yLim & Y_M(n,1) < yLim
+                    flux(m - round(minX), n) = BZ(n,m,heightIndex);
                 end
             end
         end
-
+        flux
         totalFlux(i) = trapz(Y_M(:,1)',trapz(X_M(1,round(minX)+1:round(minX)+numberOfSquaresY),flux,2));
 
         %% Car filament for plots
@@ -100,7 +128,7 @@ function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, sp
             plot3(BSmag.filament(n).Gamma(:,1),BSmag.filament(n).Gamma(:,2),BSmag.filament(n).Gamma(:,3),'.-k') % plot filament
         end
         %sliceX = linspace(distance(i) + radius_car,distance(i) + 3*radius_car,numberOfSquaresY);
-        slice(X,Y,Z,BZ,[],[],[height]), colorbar % plot Bz
+        %slice(X,Y,Z,BZ,[],[],[height]), colorbar % plot Bz
         plot3(Gamma_car(:,1),Gamma_car(:,2),Gamma_car(:,3),'.-r') % plot car filament
         xlabel ('x [m]'), ylabel ('y [m]'), zlabel ('z [m]'), title ('Bz [T]')
         daspect([1,1,1])
@@ -110,56 +138,20 @@ function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, sp
         drawnow
         pause(.4)
 
-        frame1 = getframe(gcf); % get frame
-        writeVideo(myVideo1, frame1);
         clf
         hold off
-        
-        %% FIGURE Visualize surface (side view)
-        %{
-        f2 = figure(2);
-        f2.OuterPosition = [ 1.5*plot_scrsz(3) .2*plot_scrsz(4) .6*plot_scrsz(3) .7*plot_scrsz(4)];
-        hold on, box on, grid on
-        plot3(Gamma(:,1),Gamma(:,2),Gamma(:,3),'.-k') % plot filament
-        slice(X,Y,Z,BZ,[],[0],[]), colorbar % plot Bz
-        plot3(Gamma_car(:,1),Gamma_car(:,2),Gamma_car(:,3),'.-r') % plot car filament
-        xlabel ('x [m]'), ylabel ('y [m]'), zlabel ('z [m]'), title ('Bz [T]')
-        daspect([1,1,1])
-        view(0,0)
-        caxis([-1 1]*1e-6)
-        drawnow
-        pause(.4)
-
-        frame2 = getframe(gcf); %get frame
-        writeVideo(myVideo2, frame2);
-        clf
-        hold off
-        %}
     end
-
-    close(myVideo1)
-    %close(myVideo2)
-    R_car = rho_car * L_car / A_car;
+    
     dT = diff(time);
     inducedEMF = -turns_car*diff(totalFlux)./dT;
-    I_car = inducedEMF./R_car;
-    totalCharge = trapz(time(1:length(I_car)),efficiencyOfRectifier*abs(I_car));
-    cumCharge = cumtrapz(time(1:length(I_car)),efficiencyOfRectifier*abs(I_car));
+    I_car = inducedEMF./rho_car;
+    totalCharge = trapz(efficiencyOfRectifier*abs(I_car))*distanceStep/velocity;
     
     f3 = figure(3);
         hold on
-        plot(time(1:length(I_car)),I_car)
+        plot(time,I_car)
         xlabel ('time [s]'), ylabel ('Current [A]'), title ('Current vs. Time')
-        saveas(f3,sprintf('currentVStime%u.jpg',scenarioID))
+        saveas(f3,sprintf('chargeVStime%u.jpg',scenarioID))
         hold off
-        
-    f4 = figure(4);
-        hold on
-        plot(time(1:length(cumCharge)),cumCharge)
-        xlabel ('time [s]'), ylabel ('Cumulative Charge [C]'), title ('Cumulative Charge vs. Time')
-        saveas(f4,sprintf('cumChargeVStime%u.jpg',scenarioID))
-        hold off
-        
     close all
     toc
-end
