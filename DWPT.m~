@@ -1,4 +1,6 @@
-%AUTHOR:    Katherine Kemp (katherine.e.kemp@gmail.com)
+%%
+%AUTHOR:    20150407, L. Queval (loic.queval@gmail.com)
+%COPYRIGHT: 2015, Loic Quéval, BSD License (http://opensource.org/licenses/BSD-3-Clause).
 
 function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, spacing, velocity, rho_car, L_car, A_car, scenarioID) 
     %% FORMULA Constants
@@ -19,7 +21,7 @@ function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, sp
     
     tic %  Start counting time
     plot_scrsz = get(groot,'ScreenSize'); % Make graphs the screen size
-    distance = 0:distanceStep:maxDistance; % Make distance array the max distance - the car coil (so it doesn't go off the page)
+    distance = 0:distanceStep:maxDistance - 2 * radius_car; % Make distance array the max distance - the car coil (so it doesn't go off the page)
     time = distance./velocity; % Corresponding time array
     flux = zeros(1, length(distance)); % [C] Initialize flux array
     BSmag.Nfilament = 0; % Initialize number of source filament (from BSmag_init)
@@ -31,18 +33,21 @@ function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, sp
     myVideo1.FrameRate = 10;  % can adjust this, 5 - 10 works well for me
     open(myVideo1)
 
+    %{
     filename2 = sprintf('data/scenario%usideview', scenarioID);
     myVideo2 = VideoWriter(filename2, 'MPEG-4'); % open video file
     myVideo2.FrameRate = 10;  % can adjust this, 5 - 10 works well for me
     open(myVideo2)
+    %}
     
     %% Create Filaments
-    
     Gamma = [];
-    coilCount = (maxDistance - radius) / spacing + 1;
+
+    coilCount = (maxDistance - radius) / spacing;
     sign = 1;
     for x = 0:coilCount
-        theta = linspace(0, turns*2*pi, turns*filamentStep); % Source points (points where there is a current source)
+        % Source points (points where there is a current source)
+        theta = linspace(0, turns*2*pi, turns*filamentStep);
         Gamma = [cos(theta')*radius + radius + x * spacing, sin(theta') * radius, theta'/tightness]; % x,y,z
         [BSmag] = BSmag_add_filament(BSmag,Gamma,sign*I,dGamma); %% populate BSmag data structure
         sign = -sign;
@@ -50,7 +55,6 @@ function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, sp
     
     %% Place vector field
     % Field points (where we want to calculate the field)
-    
     maxRadius = max(radius,radius_car);
     numberOfSquaresX = 1 + maxDistance / increment; % Calculate the number of squares on the mesh X
     numberOfSquaresY = 1 + 2*maxRadius / increment; % Calculate the number of squares on the mesh Y
@@ -62,15 +66,14 @@ function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, sp
     heightIndex = .5 + numberOfSquaresZ / 2;
     
     %% Biot-Savart Integration
-    
     [X,Y,Z,BZ] = BSmag_get_B(BSmag,X_M,Y_M,Z_M,muRel); %% This is where the integation happens
     BZ(abs(BZ)<1e-10) = 0; % Make tiny values equal to 0
     BZlimits = [min(min(BZ(:,:,heightIndex))) max(max(BZ(:,:,heightIndex)))]; % get [minBZ maxBZ]
     
     %% Simulation
     for i=1:length(distance)
+    %for i=10
         %% Calculate current flux and total charge
-        
         minX = distance(i) * numberOfSquaresX / maxDistance; % index in the mesh grid of the minimum x value of the car coil
         field = zeros(numberOfSquaresY, numberOfSquaresY); % initialize flux array to zeros
 
@@ -86,7 +89,6 @@ function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, sp
         flux(i) = trapz(Y_M(:,1)',trapz(X_M(1,round(minX)+1:round(minX)+numberOfSquaresY),field,2)); % Integrate field of x and then over y to get total flux at that location
 
         %% Car filament for plots
-        
         theta_car = linspace(0, turns_car*2*pi, turns_car*filamentStep);
         Gamma_car = [cos(theta_car')*radius_car + radius_car + distance(i), sin(theta_car')*radius_car, theta_car'/tightness_car + height]; % x,y,z
 
@@ -101,52 +103,49 @@ function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, sp
         end
         %sliceX = linspace(distance(i) + radius_car,distance(i) + 3*radius_car,numberOfSquaresY);
         slice(X,Y,Z,BZ,[],[],[height]), colorbar % plot Bz at heigh of the car coil
-        plot3(Gamma_car(:,1),Gamma_car(:,2),Gamma_car(:,3),'.-r') % plot car filament in red
+        plot3(Gamma_car(:,1),Gamma_car(:,2),Gamma_car(:,3),'.-r') % plot car filament
         xlabel ('x [m]'), ylabel ('y [m]'), zlabel ('z [m]'), title ('Bz [T]')
         daspect([1,1,1])
-        view(3) % Show 3D view
+        view(3)
         caxis(1.05*BZlimits)
         drawnow
         pause(.4)
 
         frame1 = getframe(gcf); % Get frame
-        writeVideo(myVideo1, frame1); % Add frame to the video
+        writeVideo(myVideo1, frame1); % Add fram to the video
         clf
         hold off
-        
         %% FIGURE Visualize surface (side view)
-        
+        %{
         f2 = figure(2);
         f2.OuterPosition = [ 1.5*plot_scrsz(3) .2*plot_scrsz(4) .6*plot_scrsz(3) .7*plot_scrsz(4)];
         hold on, box on, grid on
         xlim([0, maxDistance + 2*maxRadius]);
-        for n=1:BSmag.Nfilament % Plot all filaments in road in black
-            plot3(BSmag.filament(n).Gamma(:,1),BSmag.filament(n).Gamma(:,2),BSmag.filament(n).Gamma(:,3),'.-k') % plot filament
-        end
-        slice(X,Y,Z,BZ,[],[0],[]), colorbar % plot Bz at center of road coils from the sideview
-        plot3(Gamma_car(:,1),Gamma_car(:,2),Gamma_car(:,3),'.-r') % plot car filament in red
+        plot3(Gamma(:,1),Gamma(:,2),Gamma(:,3),'.-k') % plot filament
+        slice(X,Y,Z,BZ,[],[0],[]), colorbar % plot Bz
+        plot3(Gamma_car(:,1),Gamma_car(:,2),Gamma_car(:,3),'.-r') % plot car filament
         xlabel ('x [m]'), ylabel ('y [m]'), zlabel ('z [m]'), title ('Bz [T]')
         daspect([1,1,1])
-        view(0,0) % Show the desired side view
-        caxis(1.05*BZlimits)
+        view(0,0)
+        caxis([-1 1]*1e-6)
         drawnow
         pause(.4)
 
-        frame2 = getframe(gcf); % Get frame
-        writeVideo(myVideo2, frame2); % Add frame to the video
+        frame2 = getframe(gcf); %get frame
+        writeVideo(myVideo2, frame2);
         clf
         hold off
-        
+        %}
     end
 
     close(myVideo1)
-    close(myVideo2)
+    %close(myVideo2)
     R_car = rho_car * L_car / A_car;
     dT = diff(time);
     inducedEMF = -turns_car*diff(flux)./dT;
     I_car = inducedEMF./R_car;
     totalCharge = trapz(time(1:length(I_car)),efficiencyOfRectifier*abs(I_car));
-    cumulativeCharge = cumtrapz(time(1:length(I_car)),efficiencyOfRectifier*abs(I_car));
+    cumCharge = cumtrapz(time(1:length(I_car)),efficiencyOfRectifier*abs(I_car));
     
     f3 = figure(3);
         hold on
@@ -157,11 +156,11 @@ function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, sp
         
     f4 = figure(4);
         hold on
-        plot(time(1:length(cumulativeCharge)),cumulativeCharge)
+        plot(time(1:length(cumCharge)),cumCharge)
         xlabel ('time [s]'), ylabel ('Cumulative Charge [C]'), title ('Cumulative Charge vs. Time')
         saveas(f4,sprintf('data/cumChargeVStime%u.jpg',scenarioID))
         hold off
         
     close all
-    toc % print time elapsed
+    toc
 end

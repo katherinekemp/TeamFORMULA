@@ -18,20 +18,21 @@ velocity = 1; % velocity of car [m/s]
 
 %% Cost Analysis Variables
 
-rho_car = 10; % resistivity of the wire [?] ?????
+rho_car = 10; % resistivity of the wire [ohm-m]
 L_car = 10000; % Length of the wire in the car [m]
 A_car = .001; % Cross sectional area of the wire in the car [m^2]
-rho = 10; % resistivity of the wire [?]
-V = 1; % voltage of power source [V]
 V_car = 12; % voltage of car battery [V]
-%gauge in road
-%gauge in car
+%gauge in car?
+
+rho = 10; % resistivity of the wire [ohm-m]
+V = 1; % voltage of power source [V]
+%gauge in road?
 
 %% MAIN
 
 totalScenarios = 1;
-data = zeros(totalScenarios, 12);
-format shortG
+data = zeros(totalScenarios, 12); % Initialize data matrix
+format shortG % print data with the desired detail
 
 for i = 1:totalScenarios
     scenarioID = i;

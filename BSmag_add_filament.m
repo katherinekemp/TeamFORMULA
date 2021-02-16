@@ -24,6 +24,7 @@ function [BSmag] = BSmag_add_filament(BSmag,Gamma,I,dGamma)
 %      BSmag.filament(*).dGamma     = Filament max discretization step [m]
 %----------------------------------------------------
 
+% Information has been removed from the original script for efficiency
 n = BSmag.Nfilament+1;
 BSmag.filament(n).Gamma = Gamma;
 BSmag.filament(n).I = I;

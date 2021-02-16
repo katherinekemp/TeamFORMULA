@@ -27,6 +27,8 @@ function [X,Y,Z,BZ] = BSmag_get_B(BSmag,X,Y,Z,muRel)
 %    BZ         = Field points B z-component vector or matrix
 %----------------------------------------------------
 
+% Information has been removed from the original script for efficiency
+
 mu0 = 4*pi*1e-7; % vacuum permeability [N/A^2]
 mu = mu0*muRel;
            
