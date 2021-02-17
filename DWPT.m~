@@ -1,6 +1,6 @@
 %AUTHOR:    Katherine Kemp (katherine.e.kemp@gmail.com)
 
-function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, spacing, velocity, rho_car, L_car, A_car, scenarioID) 
+function totalCharge = DWPTz(V, d, turns, radius, d_car, turns_car, radius_car, height, spacing, velocity, scenarioID) 
     %% FORMULA Constants
 
     maxDistance = 160; % distance the car will travel [m] 1600, about 1 mile
@@ -9,9 +9,12 @@ function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, sp
     
     efficiencyOfRectifier = 1; % We assume the rectifier is perfectly efficient for our simulations []
     muRel = 1; % We assume vacuum permeability in our simulations []
+    rho = .0171 / 1000^2 % Resistivity of copper [ohm-m]
+    wireGauges = [8 0]; % Possible wire guages []
+    wireDiameters = [.32766 .205232] / 100; % Corresponding diameters of wire gauges [m]
     
     dGamma = 1e9; % filament max discretization step [m] found no need to change from provided examples
-    filamentStep = 10 * radius; % number of points in the filament [] ???????????
+    filamentStep = 10 * radius; % number of points in the each turn of the filament [1/m]
     tightness = 10000; % Increasing tightness will make the coil wrapped more tightly [1/m] We want them to be wrapped perfectly tightly, and this appears to be close enough.
     tightness_car = 10000; % Increasing tightness will make the coil wrapped more tightly [1/m] We want them to be wrapped perfectly tightly, and this appears to be close enough.
 
@@ -19,12 +22,24 @@ function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, sp
     
     tic %  Start counting time
     plot_scrsz = get(groot,'ScreenSize'); % Make graphs the screen size
+    
+    d = wireDiameters(find(wireGauge == gauge)); % Wire diameter corresponding to gauge [m]
+    A = pi * d^2 / 4; % Cross sectional area [m^2]
+    L = 2 * pi * radius * (turns + 1); % Length of a coil [m], we assume the wire beyonf the coil to be negligible in comparison but add one extra loop to get a closer estimate
+    R = rho * L / A; % Resistance of a coil [ohms]
+    I = V / R; % Currentin road [A]
+    
+    A_car = pi * d_car^2 / 4; % Cross sectional area [m^2]
+    L_car = 2 * pi * radius_car * (turns + 1); % Length of a coil [m], we assume the wire beyonf the coil to be negligible in comparison but add one extra loop to get a closer estimate
+    R_car = rho * L_car / A_car; % Resistance of a car coil [ohms]
+    
     distance = 0:distanceStep:maxDistance; % Make distance array the max distance - the car coil (so it doesn't go off the page)
     time = distance./velocity; % Corresponding time array
+    
     flux = zeros(1, length(distance)); % [C] Initialize flux array
     BSmag.Nfilament = 0; % Initialize number of source filament (from BSmag_init)
 
-    %% Initialize video
+    %% Initialize videos
     
     filename1 = sprintf('data/Scenario%u', scenarioID);
     myVideo1 = VideoWriter(filename1, 'MPEG-4'); % open video file
@@ -45,7 +60,7 @@ function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, sp
         theta = linspace(0, turns*2*pi, turns*filamentStep); % Source points (points where there is a current source)
         Gamma = [cos(theta')*radius + radius + x * spacing, sin(theta') * radius, theta'/tightness]; % x,y,z
         [BSmag] = BSmag_add_filament(BSmag,Gamma,sign*I,dGamma); %% populate BSmag data structure
-        %sign = -sign;
+        sign = -sign;
     end
     
     %% Place vector field
@@ -99,7 +114,6 @@ function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, sp
         for n=1:BSmag.Nfilament % Plot all filaments in road in black
             plot3(BSmag.filament(n).Gamma(:,1),BSmag.filament(n).Gamma(:,2),BSmag.filament(n).Gamma(:,3),'.-k') % plot filament
         end
-        %sliceX = linspace(distance(i) + radius_car,distance(i) + 3*radius_car,numberOfSquaresY);
         slice(X,Y,Z,BZ,[],[],[height]), colorbar % plot Bz at heigh of the car coil
         plot3(Gamma_car(:,1),Gamma_car(:,2),Gamma_car(:,3),'.-r') % plot car filament in red
         xlabel ('x [m]'), ylabel ('y [m]'), zlabel ('z [m]'), title ('Bz [T] 3D Road View')
@@ -141,7 +155,7 @@ function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, sp
 
     close(myVideo1)
     close(myVideo2)
-    R_car = rho_car * L_car / A_car;
+    
     dT = diff(time);
     inducedEMF = -turns_car*diff(flux)./dT;
     I_car = inducedEMF./R_car;
