@@ -112,22 +112,35 @@ function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, sp
         hold off
         
     end
-    flux
+    
     k = 4 * spacing / increment - 1;
-    for j = 2 * spacing / increment - 1 : 0
-        flux(j) = flux(k);
+    for j = 2 * spacing / increment - 1: -1 : 1
+        if flux(j) == 0
+            flux(j) = flux(k);
+        end
+        
         if k == 2 * spacing / increment 
             k = 4 * spacing / increment - 1;
         else
-            k -= 1;
+            k = k - 1;
         end
     end
+    
+    k = 2 * spacing / increment;
+    for j = 4 * spacing / increment : length(flux)
+        if flux(j) == 0
+            flux(j) = flux(k);
+        end
         
-        
-        flux
-    %{
+        if k == 4 * spacing / increment - 1
+            k = 2 * spacing / increment;
+        else
+            k = k + 1;
+        end
+    end
+    
     close(myVideo1)
-    R_car = rho_car * L_car / A_car;
+    
     dT = diff(time);
     inducedEMF = -turns_car*diff(flux)./dT;
     I_car = inducedEMF./R_car;
@@ -147,7 +160,7 @@ function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, sp
         xlabel ('time [s]'), ylabel ('Cumulative Charge [C]'), title ('Cumulative Charge vs. Time')
         saveas(f4,sprintf('data/cumChargeVStime%u.jpg',scenarioID))
         hold off
-    %}
+        
     close all
     toc % print time elapsed
 end

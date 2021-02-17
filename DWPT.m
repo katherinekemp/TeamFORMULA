@@ -1,6 +1,6 @@
 %AUTHOR:    Katherine Kemp (katherine.e.kemp@gmail.com)
 
-function totalCharge = DWPTz(V, wireGauge, turns, radius, wireGauge_car, turns_car, radius_car, height, spacing, velocity, scenarioID) 
+function totalCharge = DWPT(V, wireGauge, turns, radius, wireGauge_car, turns_car, radius_car, height, spacing, velocity, scenarioID) 
     %% FORMULA Constants
 
     maxDistance = 160; % distance the car will travel [m] 1600, about 1 mile
@@ -9,6 +9,7 @@ function totalCharge = DWPTz(V, wireGauge, turns, radius, wireGauge_car, turns_c
     
     efficiencyOfRectifier = 1; % We assume the rectifier is perfectly efficient for our simulations []
     muRel = 1; % We assume vacuum permeability in our simulations []
+    
     rho = .0171 / 1000^2 % Resistivity of copper [ohm-m]
     wireGauges = [8 12]; % Possible wire guages []
     wireDiameters = [.32766 .205232] / 100; % Corresponding diameters of wire gauges [m]
