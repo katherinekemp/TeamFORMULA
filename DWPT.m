@@ -24,7 +24,7 @@ function totalCharge = DWPTz(I, turns, radius, turns_car, radius_car, height, sp
     flux = zeros(1, length(distance)); % [C] Initialize flux array
     BSmag.Nfilament = 0; % Initialize number of source filament (from BSmag_init)
 
-    %% Initialize video
+    %% Initialize videos
     
     filename1 = sprintf('data/Scenario%u', scenarioID);
     myVideo1 = VideoWriter(filename1, 'MPEG-4'); % open video file
