@@ -3,14 +3,14 @@
 function totalCharge = DWPT(V, wireGauge, turns, radius, wireGauge_car, turns_car, radius_car, height, spacing, velocity, scenarioID) 
     %% FORMULA Constants
 
-    maxDistance = 160; % distance the car will travel [m] 1600, about 1 mile
+    maxDistance = 1600; % distance the car will travel [m] 1600, about 1 mile
     increment = .5; % Resolution (distance between the points in meshgrid) [m] 1/50 pi/4 ~= .78375
     distanceStep = increment; % Distance between timesteps [m] keep equal to increment for best results, or multiply by a positive integer for a more coarse simulation
     
     efficiencyOfRectifier = 1; % We assume the rectifier is perfectly efficient for our simulations []
     muRel = 1; % We assume vacuum permeability in our simulations []
     
-    rho = .0171 / 1000^2 % Resistivity of copper [ohm-m]
+    rho = .0171 / 1000^2; % Resistivity of copper [ohm-m]
     wireGauges = [8 12]; % Possible wire guages []
     wireDiameters = [.32766 .205232] / 100; % Corresponding diameters of wire gauges [m]
     
