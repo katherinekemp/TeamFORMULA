@@ -1,8 +1,6 @@
 %AUTHOR:    Katherine Kemp (katherine.e.kemp@gmail.com)
 
-function data = mainMultiFinal(outputFolder) 
-    clear all, close all, clc
-    
+function data = mainMultiFinal(outputFolder)  
     %% FORMULA variables
 
     % Transmitting coil
