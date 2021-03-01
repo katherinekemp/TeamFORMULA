@@ -55,8 +55,11 @@ function data = mainMulti()
     toc
 
     delete(gcp('nocreate'))
-    class(data)
-    data = num2str(data, 5)
-    class(data)
-    writematrix(data,fullfile('data','data.csv'))
+    
+    fileName = fopen(fullfile('data','data.csv'),'w');
+    for j = 1:size(data,1)
+        fprintf(fileName, '%d,', data(j,:)); 
+        fprintf(fileName, '\n');
+    end
+    fclose('all');
 end
