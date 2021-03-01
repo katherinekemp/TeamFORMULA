@@ -114,14 +114,14 @@ function totalCharge = get_flux(turns, wireGauge_car, turns_car, radius_car, hei
         hold on
         plot(time(1:length(I_car)),I_car)
         xlabel ('time [s]'), ylabel ('Current [A]'), title ('Current vs. Time')
-        saveas(f3,sprintf('data/currentVStime%u.jpg',scenarioID))
+        saveas(f3,fullfile('data',sprintf('currentVStime%u.jpg',scenarioID)))
         hold off
         
     f4 = figure(4);
         hold on
         plot(time(1:length(cumulativeCharge)),cumulativeCharge)
         xlabel ('time [s]'), ylabel ('Cumulative Charge [C]'), title ('Cumulative Charge vs. Time')
-        saveas(f4,sprintf('data/cumChargeVStime%u.jpg',scenarioID))
+        saveas(f4,fullfile('data',sprintf('cumChargeVStime%u.jpg',scenarioID)))
         hold off
         
     close all
