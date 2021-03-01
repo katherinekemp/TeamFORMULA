@@ -1,25 +1,25 @@
 %AUTHOR:    Katherine Kemp (katherine.e.kemp@gmail.com)
 
-function data = mainMulti() 
+function data = mainMultiFinal() 
     clear all, close all, clc
     
     %% FORMULA variables
 
     % Transmitting coil
-    V = [10 11]; % Voltage of solar panels [V]
+    V = [96 600]; % Voltage of solar panels [V]
     wireGauge = [8]; % Wire gauge []
-    turns = [10]; % Number of turns in the coil []
-    radius = [10]; % Radius of transmitting coil [m]
+    turns = [229 321]; % Number of turns in the coil []
+    radius = [1.5 2.1]; % Radius of transmitting coil [m]
 
     % Receiving coil
     wireGauge_car = [12]; % Wire gauge []
-    turns_car = [10]; % Number of turns in the coil []
-    radius_car = [10]; % Radius of transmitting coil [m]
+    turns_car = [413 566]; % Number of turns in the coil []
+    radius_car = [2.7 3.7]; % Radius of transmitting coil [m]
 
     % Coil orientation
-    height = [2 30]; % Height of the receiving coil above the transmitting coil [m]
-    spacing = [3 * radius]; % Distance betewen centers of coils in road [m]
-    velocity = [1 2 3]; % Velocity of car [m/s]
+    height = [0 .5]; % Height of the receiving coil above the transmitting coil [m]
+    spacing = [2 3] * radius; % Distance betewen centers of coils in road [m]
+    velocity = [18 36]; % Velocity of car [m/s]
 
     %% Cost Analysis Variables
 
@@ -40,12 +40,10 @@ function data = mainMulti()
     data =  []; % Initialize data matrix
     format shortG % print data with the desired detail
 
-    parpool(2);
+    parpool(7);
 
     tic
     parfor i = 1 : totalScenarios
-        %str = sprintf('%d, %d, %d, %d, %d, %d, %d', A(i), B(i), C(i), D(i), E(i), F(i), G(i));
-        %disp(str);
         tic
         returnData = get_field(A(i), B(i), C(i), D(i), wireGauge_car, turns_car, E(i), F(i), G(i), velocity, i);
         toc
@@ -55,6 +53,5 @@ function data = mainMulti()
     toc
 
     delete(gcp('nocreate'))
-    data
     writematrix(data,'data/data.csv')
 end
