@@ -1,10 +1,8 @@
 %AUTHOR:    Katherine Kemp (katherine.e.kemp@gmail.com)
 
-function data = mainMultiFinal(outputFolder) 
-    clear all, close all, clc
-    
+function data = mainMultiFinal(outputFolder)  
     %% FORMULA variables
-
+    outputFolders =
     % Transmitting coil
     V = [96 600]; % Voltage of solar panels [V]
     wireGauge = [8]; % Wire gauge []
@@ -41,7 +39,7 @@ function data = mainMultiFinal(outputFolder)
     data =  []; % Initialize data matrix
     format shortG % print data with the desired detail
 
-    parpool(7);
+    parpool(2);
 
     tic
     parfor i = 1 : totalScenarios

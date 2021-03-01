@@ -2,7 +2,7 @@
 
 function data = mainMultiFinal(outputFolder)  
     %% FORMULA variables
-
+    outputFolder = 'output';
     % Transmitting coil
     V = [96 600]; % Voltage of solar panels [V]
     wireGauge = [8]; % Wire gauge []
@@ -35,11 +35,11 @@ function data = mainMultiFinal(outputFolder)
     F = reshape(F, [1, totalScenarios]);
     G = reshape(G, [1, totalScenarios]);
     
-    mkdir outputFolder
+    mkdir(outputFolder)
     data =  []; % Initialize data matrix
     format shortG % print data with the desired detail
 
-    parpool(4);
+    parpool(2);
 
     tic
     parfor i = 1 : totalScenarios

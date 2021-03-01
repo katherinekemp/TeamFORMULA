@@ -3,7 +3,7 @@
 function data = get_field(V, wireGauge, turns, radius, wireGauge_car, turns_car, radius_car, height, spacing, velocity, scenarioID, outputFolder) 
     %% FORMULA Constants
 
-    increment = .5; % Resolution (distance between the points in meshgrid) [m] 1/50 pi/4 ~= .78375
+    increment = 1/50; % Resolution (distance between the points in meshgrid) [m] 1/50 pi/4 ~= .78375
     muRel = 1; % We assume vacuum permeability in our simulations []
     
     rho = .0171 / 1000^2; % Resistivity of copper [ohm-m]
