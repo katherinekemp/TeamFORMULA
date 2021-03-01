@@ -53,5 +53,5 @@ function data = mainMultiFinal()
     toc
 
     delete(gcp('nocreate'))
-    writematrix(data,'data/data.csv')
+    writematrix(data,fullfile('data','data.csv')
 end
