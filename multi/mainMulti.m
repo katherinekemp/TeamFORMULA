@@ -47,7 +47,7 @@ function data = mainMulti()
         %str = sprintf('%d, %d, %d, %d, %d, %d, %d', A(i), B(i), C(i), D(i), E(i), F(i), G(i));
         %disp(str);
         tic
-        returnData = get_field(A(i), B(i), C(i), D(i), wireGauge_car, turns_car, E(i), F(i), G(i), velocity, i);
+        returnData = get_field(A(i), B(i), C(i), D(i), wireGauge_car, turns_car, E(i), F(i), G(i), velocity, i, 'data');
         toc
         data = [data; returnData];
         sprintf('%d percent done, i = %d', 100*i/totalScenarios, i)
@@ -55,6 +55,8 @@ function data = mainMulti()
     toc
 
     delete(gcp('nocreate'))
-    data
+    class(data)
+    data = num2str(data, 5)
+    class(data)
     writematrix(data,fullfile('data','data.csv'))
 end

@@ -1,6 +1,6 @@
 %AUTHOR:    Katherine Kemp (katherine.e.kemp@gmail.com)
 
-function data = get_field(V, wireGauge, turns, radius, wireGauge_car, turns_car, radius_car, height, spacing, velocity, scenarioID) 
+function data = get_field(V, wireGauge, turns, radius, wireGauge_car, turns_car, radius_car, height, spacing, velocity, scenarioID, outputFolder) 
     %% FORMULA Constants
 
     increment = .5; % Resolution (distance between the points in meshgrid) [m] 1/50 pi/4 ~= .78375
@@ -73,7 +73,7 @@ function data = get_field(V, wireGauge, turns, radius, wireGauge_car, turns_car,
     format shortG % print data with the desired detail
     
     for i = 1:length(A)
-        totalCharge = get_flux(turns, A(i), B(i), radius_car, height, spacing, C(i), (scenarioID - 1)*length(A) + i, BZ, X_M, Y_M, increment, R_car, meshDistance, heightIndex, numberOfSquaresX, numberOfSquaresY);
+        totalCharge = get_flux(turns, A(i), B(i), radius_car, height, spacing, C(i), (scenarioID - 1)*length(A) + i, BZ, X_M, Y_M, increment, R_car, meshDistance, heightIndex, numberOfSquaresX, numberOfSquaresY, outputFolder);
         data(i,:) = [((scenarioID - 1)*length(A) + i) V wireGauge turns radius A(i) B(i) radius_car height spacing C(i) totalCharge];
     end
     

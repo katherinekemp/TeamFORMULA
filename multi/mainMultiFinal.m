@@ -1,6 +1,6 @@
 %AUTHOR:    Katherine Kemp (katherine.e.kemp@gmail.com)
 
-function data = mainMultiFinal() 
+function data = mainMultiFinal(outputFolder) 
     clear all, close all, clc
     
     %% FORMULA variables
@@ -36,7 +36,8 @@ function data = mainMultiFinal()
     E = reshape(E, [1, totalScenarios]);
     F = reshape(F, [1, totalScenarios]);
     G = reshape(G, [1, totalScenarios]);
-
+    
+    mkdir outputFolder
     data =  []; % Initialize data matrix
     format shortG % print data with the desired detail
 
@@ -45,7 +46,7 @@ function data = mainMultiFinal()
     tic
     parfor i = 1 : totalScenarios
         tic
-        returnData = get_field(A(i), B(i), C(i), D(i), wireGauge_car, turns_car, E(i), F(i), G(i), velocity, i);
+        returnData = get_field(A(i), B(i), C(i), D(i), wireGauge_car, turns_car, E(i), F(i), G(i), velocity, i, outputFolder);
         toc
         data = [data; returnData];
         sprintf('%d percent done, i = %d', 100*i/totalScenarios, i)
@@ -53,5 +54,5 @@ function data = mainMultiFinal()
     toc
 
     delete(gcp('nocreate'))
-    writematrix(data,fullfile('data','data.csv'))
+    writematrix(data,fullfile(outputFolder,'data.csv'))
 end
