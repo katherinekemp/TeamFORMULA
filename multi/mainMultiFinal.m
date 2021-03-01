@@ -39,7 +39,7 @@ function data = mainMultiFinal(outputFolder)
     data =  []; % Initialize data matrix
     format shortG % print data with the desired detail
 
-    parpool(2);
+    parpool(4);
 
     tic
     parfor i = 1 : totalScenarios
