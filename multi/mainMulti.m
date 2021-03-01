@@ -56,5 +56,5 @@ function data = mainMulti()
 
     delete(gcp('nocreate'))
     data
-    writematrix(data,fullfile('data','data.csv')
+    writematrix(data,fullfile('data','data.csv'))
 end
