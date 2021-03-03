@@ -110,6 +110,7 @@ function totalCharge = get_flux(turns, wireGauge_car, turns_car, radius_car, hei
     totalCharge = trapz(time(1:length(I_car)),efficiencyOfRectifier*abs(I_car));
     cumulativeCharge = cumtrapz(time(1:length(I_car)),efficiencyOfRectifier*abs(I_car));
     
+    %{
     f3 = figure(3);
         hold on
         plot(time(1:length(I_car)),I_car)
@@ -123,6 +124,6 @@ function totalCharge = get_flux(turns, wireGauge_car, turns_car, radius_car, hei
         xlabel ('time [s]'), ylabel ('Cumulative Charge [C]'), title ('Cumulative Charge vs. Time')
         saveas(f4,fullfile(outputFolder,sprintf('cumChargeVStime%u.jpg',scenarioID)))
         hold off
-        
+    %}
     close all
 end

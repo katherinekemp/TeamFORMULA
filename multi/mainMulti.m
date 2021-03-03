@@ -41,7 +41,6 @@ function data = mainMulti()
     format shortG % print data with the desired detail
 
     parpool(2);
-
     tic
     parfor i = 1 : totalScenarios
         %str = sprintf('%d, %d, %d, %d, %d, %d, %d', A(i), B(i), C(i), D(i), E(i), F(i), G(i));
@@ -53,13 +52,13 @@ function data = mainMulti()
         sprintf('%d percent done, i = %d', 100*i/totalScenarios, i)
     end
     toc
-
-    delete(gcp('nocreate'))
     
     fileName = fopen(fullfile('data','data.csv'),'w');
     for j = 1:size(data,1)
         fprintf(fileName, '%d,', data(j,:)); 
         fprintf(fileName, '\n');
     end
+    delete(gcp('nocreate'))
+    
     fclose('all');
 end

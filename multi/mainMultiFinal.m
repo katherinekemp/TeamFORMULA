@@ -6,13 +6,13 @@ function data = mainMultiFinal(outputFolder)
     % Transmitting coil
     V = [96 600]; % Voltage of solar panels [V]
     wireGauge = [8]; % Wire gauge []
-    turns = [229 321]; % Number of turns in the coil []
-    radius = [1.5 2.1]; % Radius of transmitting coil [m]
+    turns = [230 320]; % Number of turns in the coil []
+    radius = [1.5 2]; % Radius of transmitting coil [m]
 
     % Receiving coil
     wireGauge_car = [12]; % Wire gauge []
-    turns_car = [413 566]; % Number of turns in the coil []
-    radius_car = [2.7 3.7]; % Radius of transmitting coil [m]
+    turns_car = [410 570]; % Number of turns in the coil []
+    radius_car = [2.5 4]; % Radius of transmitting coil [m]
 
     % Coil orientation
     height = [0 .5]; % Height of the receiving coil above the transmitting coil [m]
