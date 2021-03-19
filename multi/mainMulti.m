@@ -21,8 +21,6 @@ function data = mainMulti()
     spacing = [3 * radius]; % Distance betewen centers of coils in road [m]
     velocity = [1 2 3]; % Velocity of car [m/s]
 
-    %% Cost Analysis Variables
-
     %% MAIN
 
     variables = 10;

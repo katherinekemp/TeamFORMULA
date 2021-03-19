@@ -3,7 +3,7 @@
 function data = get_field(V, wireGauge, turns, radius, wireGauge_car, turns_car, radius_car, height, spacing, velocity, scenarioID, outputFolder) 
     %% FORMULA Constants
 
-    increment = 1/50; % Resolution (distance between the points in meshgrid) [m] 1/50 pi/4 ~= .78375
+    increment = 1; % Resolution (distance between the points in meshgrid) [m] 1/50 pi/4 ~= .78375
     muRel = 1; % We assume vacuum permeability in our simulations []
     
     rho = .0171 / 1000^2; % Resistivity of copper [ohm-m]
@@ -27,6 +27,7 @@ function data = get_field(V, wireGauge, turns, radius, wireGauge_car, turns_car,
     R = rho * L / A; % Resistance of a coil [ohms]
     I = V / R; % Currentin road [A]
     
+    cost = .6 * I * V + .95 * rho * A * L; % Cost of the configuration [$]
     meshDistance = 2 * radius + 6 * spacing;
 
     BSmag.Nfilament = 0; % Initialize number of source filament (from BSmag_init)
@@ -69,12 +70,12 @@ function data = get_field(V, wireGauge, turns, radius, wireGauge_car, turns_car,
     B = reshape(B, [1, totalScenarios]);
     C = reshape(C, [1, totalScenarios]);
     
-    data = zeros(totalScenarios, 10 + 2); % Initialize data matrix
+    data = zeros(totalScenarios, 10 + 3); % Initialize data matrix
     format shortG % print data with the desired detail
     
     for i = 1:length(A)
         totalCharge = get_flux(turns, A(i), B(i), radius_car, height, spacing, C(i), (scenarioID - 1)*length(A) + i, BZ, X_M, Y_M, increment, R_car, meshDistance, heightIndex, numberOfSquaresX, numberOfSquaresY, outputFolder);
-        data(i,:) = [((scenarioID - 1)*length(A) + i) V wireGauge turns radius A(i) B(i) radius_car height spacing C(i) totalCharge];
+        data(i,:) = [((scenarioID - 1)*length(A) + i) V wireGauge turns radius A(i) B(i) radius_car height spacing C(i) totalCharge, cost];
     end
     
 end

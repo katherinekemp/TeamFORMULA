@@ -3,6 +3,8 @@
 function data = mainMultiFinal(outputFolder)  
     %% FORMULA variables
     outputFolder = 'output';
+    warning('off');
+    
     % Transmitting coil
     V = [96 600]; % Voltage of solar panels [V]
     wireGauge = [8]; % Wire gauge []
@@ -21,8 +23,7 @@ function data = mainMultiFinal(outputFolder)
 
     %% MAIN
 
-    variables = 10;
-    totalScenarios = length(V) * length(wireGauge) * length(turns) * length(radius) * length(radius_car) * length(height) * length(spacing)
+    totalScenarios = length(V) * length(wireGauge) * length(turns) * length(radius) * length(radius_car) * length(height) * length(spacing);
     [A B C D E F G] = ndgrid(V, wireGauge, turns, radius, radius_car, height, spacing);
 
     A = reshape(A, [1, totalScenarios]);
@@ -33,28 +34,30 @@ function data = mainMultiFinal(outputFolder)
     F = reshape(F, [1, totalScenarios]);
     G = reshape(G, [1, totalScenarios]);
     
-    mkdir(outputFolder)
+    mkdir(outputFolder);
+    name = strcat(outputFolder, '/out.txt');
+    fid = fopen(name, 'w');
+    fprintf(fid, '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n', 'scenarioID', 'V', 'wireGauge', 'turns', 'radius', 'wireGauge_car', 'turns_car', 'radius_car', 'height', 'spacing', 'velocity', 'totalCharge', 'cost');
+    fclose(fid);
+    
     data =  []; % Initialize data matrix
     format shortG % print data with the desired detail
+    parpool();
 
-    parpool(2);
-
-    tic
     parfor i = 1 : totalScenarios
+        fid = fopen(name, 'a');
         tic
         returnData = get_field(A(i), B(i), C(i), D(i), wireGauge_car, turns_car, E(i), F(i), G(i), velocity, i, outputFolder);
         toc
         data = [data; returnData];
-        sprintf('%d percent done, i = %d', 100*i/totalScenarios, i)
+        for j = 1:length(returnData(:,1))
+            for k = 1:length(returnData(j,:))
+                fprintf(fid, "%d,", returnData(j, k));
+            end
+            fprintf(fid, "\n");
+        end
     end
-    toc
 
     delete(gcp('nocreate'))
-    
-    fileName = fopen(fullfile(outputFolder,'data.csv'),'w');
-    for j = 1:size(data,1)
-        fprintf(fileName, '%d,', data(j,:)); 
-        fprintf(fileName, '\n');
-    end
     fclose('all');
 end
