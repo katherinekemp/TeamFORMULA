@@ -1,16 +1,19 @@
 %AUTHOR:    Katherine Kemp (katherine.e.kemp@gmail.com)
 
-function totalCharge = get_flux(turns, wireGauge_car, turns_car, radius_car, height, spacing, velocity, scenarioID, BZ, X_M, Y_M, increment, R_car, meshDistance, heightIndex, numberOfSquaresX, numberOfSquaresY, outputFolder) 
+function totalCharge = get_flux(turns, d_car, turns_car, radius_car, height, spacing, velocity, rho, scenarioID, BZ, X_M, Y_M, increment, meshDistance, heightIndex, numberOfSquaresX, numberOfSquaresY, outputFolder) 
     %% FORMULA Constants
     
     maxDistance = 1600; % distance the car will travel [m] 1600, about 1 mile
     distanceStep = increment; % Distance between timesteps [m] keep equal to increment for best results, or multiply by a positive integer for a more coarse simulation
     efficiencyOfRectifier = 1; % We assume the rectifier is perfectly efficient for our simulations []
-    tightness_car = 10000; % Increasing tightness will make the coil wrapped more tightly [1/m] We want them to be wrapped perfectly tightly, and this appears to be close enough.
+    %tightness_car = 10000; % Increasing tightness will make the coil wrapped more tightly [1/m] We want them to be wrapped perfectly tightly, and this appears to be close enough.
 
     %% Car and Graph Calculations
     
     %BZlimits = [min(min(BZ(:,:,heightIndex))) max(max(BZ(:,:,heightIndex)))]; % get [minBZ maxBZ]
+    A_car = pi * d_car^2 / 4; % Cross sectional area [m^2]
+    L_car = 2 * pi * radius_car * (turns_car + 1); % Length of a coil [m], we assume the wire beyonf the coil to be negligible in comparison but add one extra loop to get a closer estimate
+    R_car = rho * L_car / A_car; % Resistance of a car coil [ohms]
     
     distance = 0:distanceStep:meshDistance; % Make distance array the max distance - the car coil (so it doesn't go off the page)
     actualDistance = 0:distanceStep:maxDistance;
@@ -106,9 +109,9 @@ function totalCharge = get_flux(turns, wireGauge_car, turns_car, radius_car, hei
     
     dT = diff(time);
     inducedEMF = -turns_car*diff(flux)./dT;
-    I_car = inducedEMF./R_car;
-    totalCharge = trapz(time(1:length(I_car)),efficiencyOfRectifier*abs(I_car));
-    cumulativeCharge = cumtrapz(time(1:length(I_car)),efficiencyOfRectifier*abs(I_car));
+    I_car = inducedEMF./R_car; % [A]
+    totalCharge = trapz(time(1:length(I_car)),efficiencyOfRectifier*abs(I_car)); % [C]
+    %cumulativeCharge = cumtrapz(time(1:length(I_car)),efficiencyOfRectifier*abs(I_car));
     
     %{
     f3 = figure(3);

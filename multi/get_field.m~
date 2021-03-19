@@ -32,7 +32,7 @@ function data = get_field(V, wireGauge, turns, radius, wireGauge_car, turns_car,
     I = V / R; % Currentin road [A]
     
     cost = .6 * I * V + .95 * rho * A * L; % Cost of the configuration [$]
-    meshDistance = round(2 * radius + 6 * spacing);
+    meshDistance = 2 * radius + 6 * spacing;
 
     BSmag.Nfilament = 0; % Initialize number of source filament (from BSmag_init)
 
@@ -54,10 +54,10 @@ function data = get_field(V, wireGauge, turns, radius, wireGauge_car, turns_car,
     maxRadius = max(radius,radius_car);
     numberOfSquaresX = 1 + meshDistance / increment; % Calculate the number of squares on the mesh X
     numberOfSquaresY = 1 + 2*maxRadius / increment; % Calculate the number of squares on the mesh Y
-    numberOfSquaresZ = 5; % Calculate the number of squares on the mesh Z
+    numberOfSquaresZ = 1 + 2 / increment; % Calculate the number of squares on the mesh Z
     x_M = linspace(0, meshDistance, numberOfSquaresX); % x [m]
     y_M = linspace(-maxRadius, maxRadius, numberOfSquaresY); % y [m]
-    z_M = linspace(height - 2.5 * increment, height + 2.5 * increment, numberOfSquaresZ); % z [m]
+    z_M = linspace(height - 2 * increment, height + 2 * increment, numberOfSquaresZ); % z [m]
     [X_M,Y_M,Z_M]=meshgrid(x_M,y_M,z_M);
     heightIndex = .5 + numberOfSquaresZ / 2;
         
@@ -75,12 +75,12 @@ function data = get_field(V, wireGauge, turns, radius, wireGauge_car, turns_car,
     C = reshape(C, [1, totalScenarios]);
     D = reshape(D, [1, totalScenarios]);
     
-    data = zeros(totalScenarios, 10 + 4); % Initialize data matrix
+    data = zeros(totalScenarios, 10 + 3); % Initialize data matrix
     format shortG % print data with the desired detail
     
     for i = 1:length(A)
         totalCharge = get_flux(turns, A(i), B(i), radius_car, height, spacing, C(i), rho, (scenarioID - 1)*length(A) + i, BZ, X_M, Y_M, increment, meshDistance, heightIndex, numberOfSquaresX, numberOfSquaresY, outputFolder);
-        data(i,:) = [((scenarioID - 1)*length(A) + i) V wireGauge turns radius D(i) B(i) radius_car height original_spacing C(i) totalCharge cost cost/totalCharge];
+        data(i,:) = [((scenarioID - 1)*length(A) + i) V wireGauge turns radius D(i) B(i) radius_car height original_spacing C(i) totalCharge cost];
     end
     
 end
