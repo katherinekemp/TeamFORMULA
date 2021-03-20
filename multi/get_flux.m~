@@ -85,21 +85,21 @@ function totalCharge = get_flux(turns, d_car, turns_car, radius_car, height, spa
             flux(j) = flux(k);
         end
         
-        if k == round(2 * spacing / increment)
-            k = round(4 * spacing / increment - 1);
+        if k == 2 * spacing / increment 
+            k = 4 * spacing / increment - 1;
         else
             k = k - 1;
         end
     end
     
-    k = round(2 * spacing / increment);
-    for j = round(4 * spacing / increment) : length(flux)
+    k = 2 * spacing / increment;
+    for j = 4 * spacing / increment : length(flux)
         if flux(j) == 0
             flux(j) = flux(k);
         end
         
-        if k == round(4 * spacing / increment - 1)
-            k = round(2 * spacing / increment);
+        if k == 4 * spacing / increment - 1
+            k = 2 * spacing / increment;
         else
             k = k + 1;
         end
