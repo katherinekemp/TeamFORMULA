@@ -45,6 +45,10 @@ function varargout = notifier(recipients, fh, varargin)
 % configured properly. If you know sendmail is working, then you can
 % comment this line out.
 % parameters
+
+recipients = 'katherine.e.kemp@gmail.com';
+fh = @main;
+
 mail = 'matlab.result.notifier@gmail.com'; % my gmail address
 password = 'm4tl4b.r3sult.n0t1f13r!';  % my gmail password 
 host = 'smtp.gmail.com';
