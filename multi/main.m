@@ -47,7 +47,7 @@ function data = main(outputFolder)
     mod_val = round(totalScenarios/100);
     parpool();
 
-    parfor i = totalScenarios : 54
+    parfor i = 1563 : totalScenarios
         tic
         fid = fopen(name, 'a');
         returnData = get_field(A(i), B(i), C(i), D(i), wireGauge_car, turns_car, E(i), F(i), G(i), velocity, i, outputFolder);
