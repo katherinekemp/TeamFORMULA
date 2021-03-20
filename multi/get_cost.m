@@ -7,6 +7,7 @@ function data = get_field(V, wireGauge, turns, radius, wireGauge_car, turns_car,
     muRel = 1; % We assume vacuum permeability in our simulations []
     
     rho = .0171 / 1000^2; % Resistivity of copper [ohm-m]
+    density = 8940 * 1000; % Density of copper [g/m^3] https://copperalliance.org.uk/knowledge-base/education/education-resources/bulk-properties-copper-density-resistivity/#:~:text=Density%20is%20the%20mass%20in,(%20kg%20m%2D3).
     wireGauges = [6 8 12]; % Possible wire guages []
     wireDiameters = [.41148 .32639 .20523] / 100; % Corresponding diameters of wire gauges [m] https://ohmslawcalculator.com/awg-wire-chart
     
@@ -31,41 +32,10 @@ function data = get_field(V, wireGauge, turns, radius, wireGauge_car, turns_car,
     R = rho * L / A; % Resistance of a coil [ohms]
     I = V / R; % Currentin road [A]
     
-    cost = .6 * I * V + .95 * rho * A * L; % Cost of the configuration [$]
-    meshDistance = 2 * radius + 6 * spacing;
-
-    BSmag.Nfilament = 0; % Initialize number of source filament (from BSmag_init)
-
-    %% Create Filaments
+    cost = .6 * I * V + .95 * density * A * L / 453.592; % Cost of the configuration [$]
+  
+    %% Flux Integration
     
-    Gamma = [];
-    coilCount = 7;
-    sign = 1;
-    for x = 0:coilCount
-        theta = linspace(0, turns*2*pi, turns*filamentStep); % Source points (points where there is a current source)
-        Gamma = [cos(theta')*radius + radius + x * spacing, sin(theta') * radius, theta'/tightness]; % x,y,z
-        [BSmag] = BSmag_add_filament(BSmag,Gamma,sign*I,dGamma); %% populate BSmag data structure
-        sign = -sign;
-    end
-    
-    %% Place vector field
-    % Field points (where we want to calculate the field)
-    
-    maxRadius = max(radius,radius_car);
-    numberOfSquaresX = 1 + meshDistance / increment; % Calculate the number of squares on the mesh X
-    numberOfSquaresY = 1 + 2*maxRadius / increment; % Calculate the number of squares on the mesh Y
-    numberOfSquaresZ = 1 + 2 / increment; % Calculate the number of squares on the mesh Z
-    x_M = linspace(0, meshDistance, numberOfSquaresX); % x [m]
-    y_M = linspace(-maxRadius, maxRadius, numberOfSquaresY); % y [m]
-    z_M = linspace(height - 2 * increment, height + 2 * increment, numberOfSquaresZ); % z [m]
-    [X_M,Y_M,Z_M]=meshgrid(x_M,y_M,z_M);
-    heightIndex = .5 + numberOfSquaresZ / 2;
-        
-    %% Biot-Savart Integration
-    
-    [~,~,~,BZ] = BSmag_get_B(BSmag,X_M,Y_M,Z_M,muRel); %% This is where the integation happens
-    BZ(abs(BZ)<1e-10) = 0; % Make tiny values equal to 0
-
     totalScenarios = length(d_car) * length(turns_car) * length(velocity);
     [A, B, C] = ndgrid(d_car, turns_car, velocity);
     [D, ~, ~] = ndgrid(wireGauge_car, turns_car, velocity);
@@ -75,12 +45,12 @@ function data = get_field(V, wireGauge, turns, radius, wireGauge_car, turns_car,
     C = reshape(C, [1, totalScenarios]);
     D = reshape(D, [1, totalScenarios]);
     
-    data = zeros(totalScenarios, 10 + 3); % Initialize data matrix
+    data = zeros(totalScenarios, 10 + 4); % Initialize data matrix
     format shortG % print data with the desired detail
     
     for i = 1:length(A)
-        totalCharge = get_flux(turns, A(i), B(i), radius_car, height, spacing, C(i), rho, (scenarioID - 1)*length(A) + i, BZ, X_M, Y_M, increment, meshDistance, heightIndex, numberOfSquaresX, numberOfSquaresY, outputFolder);
-        data(i,:) = [((scenarioID - 1)*length(A) + i) V wireGauge turns radius D(i) B(i) radius_car height original_spacing C(i) totalCharge cost];
+        totalCharge = 1;
+        data(i,:) = [((scenarioID - 1)*length(A) + i) V wireGauge turns radius D(i) B(i) radius_car height original_spacing C(i) totalCharge cost cost/totalCharge];
     end
     
 end

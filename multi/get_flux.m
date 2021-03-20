@@ -32,7 +32,7 @@ function totalCharge = get_flux(turns, d_car, turns_car, radius_car, height, spa
     %}
     %% Simulation
     
-    for i = 2 * spacing / increment : 4 * spacing / increment - 1
+    for i = round(2 * spacing / increment) : round(4 * spacing / increment - 1)
         %% Calculate current flux and total charge
         
         minX = distance(i) * numberOfSquaresX / meshDistance; % index in the mesh grid of the minimum x value of the car coil

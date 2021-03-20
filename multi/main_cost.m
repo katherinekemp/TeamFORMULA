@@ -1,7 +1,7 @@
 %AUTHOR:    Katherine Kemp (katherine.e.kemp@gmail.com)
 
-function data = main(outputFolder)  
-    outputFolder = 'output';
+function data = main_cost(outputFolder)  
+    outputFolder = 'output_cost';
     warning('off');
 
     %% FORMULA variables
@@ -50,7 +50,7 @@ function data = main(outputFolder)
     parfor i = 1 : totalScenarios
         tic
         fid = fopen(name, 'a');
-        returnData = get_field(A(i), B(i), C(i), D(i), wireGauge_car, turns_car, E(i), F(i), G(i), velocity, i, outputFolder);
+        returnData = get_cost(A(i), B(i), C(i), D(i), wireGauge_car, turns_car, E(i), F(i), G(i), velocity, i, outputFolder);
         data = [data; returnData];
         
         for j = 1:length(returnData(:,1))
@@ -66,7 +66,6 @@ function data = main(outputFolder)
         toc
     end
 
-    writematrix(data, 'backup.csv')
     delete(gcp('nocreate'))
     fclose('all');
 end

@@ -7,6 +7,7 @@ function data = get_field(V, wireGauge, turns, radius, wireGauge_car, turns_car,
     muRel = 1; % We assume vacuum permeability in our simulations []
     
     rho = .0171 / 1000^2; % Resistivity of copper [ohm-m]
+    density = 8940 * 1000; % Density of copper [g/m^3] https://copperalliance.org.uk/knowledge-base/education/education-resources/bulk-properties-copper-density-resistivity/#:~:text=Density%20is%20the%20mass%20in,(%20kg%20m%2D3).
     wireGauges = [6 8 12]; % Possible wire guages []
     wireDiameters = [.41148 .32639 .20523] / 100; % Corresponding diameters of wire gauges [m] https://ohmslawcalculator.com/awg-wire-chart
     
@@ -31,7 +32,7 @@ function data = get_field(V, wireGauge, turns, radius, wireGauge_car, turns_car,
     R = rho * L / A; % Resistance of a coil [ohms]
     I = V / R; % Currentin road [A]
     
-    cost = .6 * I * V + .95 * rho * A * L; % Cost of the configuration [$]
+    cost = .6 * I * V + .95 * density * A * L / 453.592; % Cost of the configuration [$]
     meshDistance = round(2 * radius + 6 * spacing);
 
     BSmag.Nfilament = 0; % Initialize number of source filament (from BSmag_init)
@@ -52,8 +53,8 @@ function data = get_field(V, wireGauge, turns, radius, wireGauge_car, turns_car,
     % Field points (where we want to calculate the field)
     
     maxRadius = max(radius,radius_car);
-    numberOfSquaresX = 1 + meshDistance / increment; % Calculate the number of squares on the mesh X
-    numberOfSquaresY = 1 + 2*maxRadius / increment; % Calculate the number of squares on the mesh Y
+    numberOfSquaresX = round(1 + meshDistance / increment); % Calculate the number of squares on the mesh X
+    numberOfSquaresY = round(1 + 2*maxRadius / increment); % Calculate the number of squares on the mesh Y
     numberOfSquaresZ = 5; % Calculate the number of squares on the mesh Z
     x_M = linspace(0, meshDistance, numberOfSquaresX); % x [m]
     y_M = linspace(-maxRadius, maxRadius, numberOfSquaresY); % y [m]
@@ -66,6 +67,8 @@ function data = get_field(V, wireGauge, turns, radius, wireGauge_car, turns_car,
     [~,~,~,BZ] = BSmag_get_B(BSmag,X_M,Y_M,Z_M,muRel); %% This is where the integation happens
     BZ(abs(BZ)<1e-10) = 0; % Make tiny values equal to 0
 
+    %% Flux Integration
+    
     totalScenarios = length(d_car) * length(turns_car) * length(velocity);
     [A, B, C] = ndgrid(d_car, turns_car, velocity);
     [D, ~, ~] = ndgrid(wireGauge_car, turns_car, velocity);
