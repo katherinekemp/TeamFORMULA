@@ -38,8 +38,8 @@ function data = main(outputFolder)
     mkdir(outputFolder);
     name = strcat(outputFolder, '/out.txt');
     fid = fopen(name, 'w');
-    fprintf(fid, '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n', 'scenarioID', 'V', 'wireGauge', 'turns', 'radius', 'wireGauge_car', 'turns_car', 'radius_car', 'height', 'spacing', 'velocity', 'totalCharge', 'cost', 'cost/charge');
-    fprintf(fid, '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n', '[]', '[V]', '[]', '[]', '[m]', '[]', '[]', '[m]', '[m]', '[m]', '[m/s]', '[C]', '[$]', '[C/$]');
+    fprintf(fid, '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n', 'scenarioID', 'i', 'V', 'wireGauge', 'turns', 'radius', 'wireGauge_car', 'turns_car', 'radius_car', 'height', 'spacing', 'velocity', 'totalCharge', 'cost', 'cost/charge');
+    fprintf(fid, '%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n', '[]', '[]', '[V]', '[]', '[]', '[m]', '[]', '[]', '[m]', '[m]', '[m]', '[m/s]', '[C]', '[$]', '[C/$]');
     fclose(fid);
     
     data =  []; % Initialize data matrix

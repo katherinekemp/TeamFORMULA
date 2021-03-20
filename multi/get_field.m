@@ -78,12 +78,12 @@ function data = get_field(V, wireGauge, turns, radius, wireGauge_car, turns_car,
     C = reshape(C, [1, totalScenarios]);
     D = reshape(D, [1, totalScenarios]);
     
-    data = zeros(totalScenarios, 10 + 4); % Initialize data matrix
+    data = zeros(totalScenarios, 10 + 5); % Initialize data matrix
     format shortG % print data with the desired detail
     
     for i = 1:length(A)
         totalCharge = get_flux(turns, A(i), B(i), radius_car, height, spacing, C(i), rho, (scenarioID - 1)*length(A) + i, BZ, X_M, Y_M, increment, meshDistance, heightIndex, numberOfSquaresX, numberOfSquaresY, outputFolder);
-        data(i,:) = [((scenarioID - 1)*length(A) + i) V wireGauge turns radius D(i) B(i) radius_car height original_spacing C(i) totalCharge cost cost/totalCharge];
+        data(i,:) = [((scenarioID - 1)*length(A) + i) scenarioID V wireGauge turns radius D(i) B(i) radius_car height original_spacing C(i) totalCharge cost cost/totalCharge];
     end
     
 end
