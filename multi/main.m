@@ -45,7 +45,7 @@ function data = main(outputFolder)
     data =  []; % Initialize data matrix
     format shortG % print data with the desired detail
     mod_val = round(totalScenarios/100);
-    parpool(16);
+    parpool();
 
     parfor i = totalScenarios : 54
         tic
