@@ -2,7 +2,7 @@
 
 function data = get_field(V, wireGauge, turns, radius, wireGauge_car, turns_car, radius_car, height, original_spacing, velocity, scenarioID, outputFolder) 
     %% FORMULA Constants
-
+    
     increment = .1; % Resolution (distance between the points in meshgrid) [m] 1/50 pi/4 ~= .78375
     muRel = 1; % We assume vacuum permeability in our simulations []
     
@@ -11,8 +11,9 @@ function data = get_field(V, wireGauge, turns, radius, wireGauge_car, turns_car,
     wireGauges = [6 8 12]; % Possible wire guages []
     wireDiameters = [.41148 .32639 .20523] / 100; % Corresponding diameters of wire gauges [m] https://ohmslawcalculator.com/awg-wire-chart
     
+    maxDistance = 1600; % distance the car will travel [m] 1600, about 1 mile
     dGamma = 1e9; % filament max discretization step [m] found no need to change from provided examples
-    filamentStep = 10 * radius; % number of points in the each turn of the filament [1/m]
+    filamentStep = 100 * radius; % number of points in the each turn of the filament [1/m]
     tightness = 10000; % Increasing tightness will make the coil wrapped more tightly [1/m] We want them to be wrapped perfectly tightly, and this appears to be close enough.
 
     %% Initialize
@@ -32,7 +33,8 @@ function data = get_field(V, wireGauge, turns, radius, wireGauge_car, turns_car,
     R = rho * L / A; % Resistance of a coil [ohms]
     I = V / R; % Currentin road [A]
     
-    cost = .6 * I * V + .95 * density * A * L / 453.592; % Cost of the configuration [$]
+    number_of_coils = maxDistance / spacing;
+    cost = number_of_coils * (.6 * I * V + .95 * density * A * L / 453.592); % Cost of the configuration [$]
     meshDistance = round(2 * radius + 6 * spacing);
 
     BSmag.Nfilament = 0; % Initialize number of source filament (from BSmag_init)
@@ -64,7 +66,7 @@ function data = get_field(V, wireGauge, turns, radius, wireGauge_car, turns_car,
         
     %% Biot-Savart Integration
     
-    [~,~,~,BZ] = BSmag_get_B(BSmag,X_M,Y_M,Z_M,muRel); %% This is where the integation happens
+    [~,~,~,BZ] = BSmag_get_B(BSmag,X_M,Y_M,Z_M,muRel); % This is where the integation happens
     BZ(abs(BZ)<1e-10) = 0; % Make tiny values equal to 0
 
     %% Flux Integration
@@ -82,7 +84,7 @@ function data = get_field(V, wireGauge, turns, radius, wireGauge_car, turns_car,
     format shortG % print data with the desired detail
     
     for i = 1:length(A)
-        totalCharge = get_flux(turns, A(i), B(i), radius_car, height, spacing, C(i), rho, (scenarioID - 1)*length(A) + i, BZ, X_M, Y_M, increment, meshDistance, heightIndex, numberOfSquaresX, numberOfSquaresY, outputFolder);
+        totalCharge = get_flux(turns, A(i), B(i), radius_car, height, spacing, C(i), rho, (scenarioID - 1)*length(A) + i, BZ, X_M, Y_M, maxDistance, increment, meshDistance, heightIndex, numberOfSquaresX, numberOfSquaresY, outputFolder);
         data(i,:) = [((scenarioID - 1)*length(A) + i) scenarioID V wireGauge turns radius D(i) B(i) radius_car height original_spacing C(i) totalCharge cost cost/totalCharge];
     end
     

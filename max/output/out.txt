@@ -1,0 +1,2 @@
+scenarioID [],i [],V [V],wireGauge [],turns [],radius [m],wireGauge_car [],turns_car [],radius_car [m],height [m],spacing [m],velocity [m/s],totalCharge [C],cost [$],cost/charge [$/C]
+1,1,600,6,510,1,8,320,1.500000e+00,1.500000e-01,9.000000e-02,30,1.233412e+04,4.066343e+07,3.296824e+03,
