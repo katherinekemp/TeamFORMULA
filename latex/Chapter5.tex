@@ -1,0 +1,146 @@
+%Chapter 5
+
+\renewcommand{\thechapter}{5}
+
+\chapter{Discussion}
+
+\section{Simulations}
+To truly gauge the effectiveness of the simulated model, the results will be applied to two EVs: 
+the Nissan Leaf and Tesla Model X. The Nissan Leaf is a budget EV with a 40 kilowatt-hour (kWh) 
+battery \cite{noauthor_2021_nodate}. The Tesla Model X is a high-performing EV with a 100 kWh battery 
+\cite{noauthor_model_nodate}. There will be two output configurations used from the simulation: the economic 
+configuration and maximum output configuration. The economic configuration represents the most optimal 
+combination of variables in terms of cost. The maximum output configuration represents the combination 
+of variables which output the absolute most charge. See Section \ref{sec: s4.1.3} for the inputs of these 
+configurations and how they were determined. 
+
+Calculations and unit conversions are required to show the charge times of the elextric vehicles for each model. 
+For the Nissan Leaf, the 40 kwh battery corresponds to 1.44 $\cdot$ 108 J. The Nissan Leaf battery is 360V 
+\cite{noauthor_2021_nodate}. Using the formula 
+\begin{equation}
+    Energy \: [J] = Voltage \: [V] \cdot Coulombs \: [C]
+\end{equation}
+We determined the battery has 4.0 $\cdot$ 105 C. Using the output data, the distance covered by the vehicle 
+is 1600 m (1 mile), and the speed is 30 m/s, so the time the simulated car takes is 53.33 s. In the economic 
+configuration, the total charge was 2142.7 C, which corresponds to a charging rate of 40.2 C/s. In the maximum 
+output configuration, the total charge is 12334.4 C, which corresponds to a charging rate of 231.3 C/s. 
+The time it will take for the maximum output configuration to charge a Nissan Leaf battery is 
+\begin{center}
+    4.0 $\cdot$ 105 C/231.3 C/s = 1729.5 s = .484 hr
+\end{center}
+The time it will take for the economic model to charge a Nissan Leaf battery is 
+\begin{center}
+    4.0 $\cdot$ 105 C/40.2 C/s = 9955.7 s or 2.77 hr
+\end{center}
+The range of the Nissan Leaf is 149 miles (239792 m), and if the car is going at 30 m/sec, then the battery will 
+run out of charge after 7993.07 s or 2.22 hr \cite{noauthor_2021_nodate}.
+
+For the Tesla Model X, the 100 kwh, 350 V battery converts to 3.6 $\cdot$ 108 J \cite{noauthor_model_nodate}. The battery has 
+1.0286 $\cdot$ 106 C. The time it will take for the maximum model to charge a Tesla Model X battery is 
+\begin{center}
+    1.0286 $\cdot$ 106 C/231.3 C/s = 4447.3 s or 1.24 hr
+\end{center}
+The time it will take for the economic model to charge a Tesla Model X battery is
+\begin{center}
+    1.0286 $\cdot$ 106 C/40.2 C/s = 25601.1 sec or 7.11 hr
+\end{center}
+The range of the Tesla Model X is 362 miles (578880 m), and if the car is going at 30 m/sec, then the battery 
+will run out of charge after 19296 s or 5.36 hr \cite{noauthor_model_nodate}. See Table \ref{t11} for a summary of charging times.
+
+\begin{table}[H]
+    \caption[Charge Time Summary]{Charge Time Summary}
+    \begin{center}
+    \begin{tabular}{| p{0.5\textwidth} | p{0.2\textwidth} | p{0.2\textwidth} |}
+    \hline
+    Time [hr] & Nissan Leaf & Tesla Model X \\
+    \hline \hline
+    Battery life without DWPT & 2.22 & 5.36 \\
+    \hline
+    Charge with Economic Model & 2.77 & 7.11 \\
+    \hline
+    Charge with Maximum Output Model & .484 & 1.24 \\
+    \hline
+    \end{tabular}
+    \end{center}
+    \label{t11}
+\end{table}
+
+Using the data values from Table \ref{t11}, the distance it takes to fully charge the Nissan Leaf and Tesla Model X 
+can be found. The distance it will take for the economic model to fully charge a Nissan Leaf is
+\begin{center}
+    972 sec $\cdot$ 30 m/s = 299160 m or 185.89 miles
+\end{center}
+The distance it will take for the maximum output model to fully charge a Nissan Leaf is
+\begin{center}
+    1742.4 sec $\cdot$ 30 m/s = 52272 m or 32.48 miles
+\end{center}
+The distance it will take for the economic model to fully charge a Tesla Model X is
+\begin{center}
+    25596 sec $\cdot$ 30 m/s = 767880 m or 477.14 miles
+\end{center}
+The distance it will take for the  maximum output model to fully charge a Tesla Model X is
+\begin{center}
+    4464 sec $\cdot$ 30 m/s = 133920 m or 83.21 miles.
+\end{center}
+See Table \ref{t12} for a summary of the charging distances.
+
+\begin{table}[H]
+    \caption[Charge Distance Summary]{Charge Distance Summary}
+    \begin{center}
+    \begin{tabular}{| p{0.5\textwidth} | p{0.2\textwidth} | p{0.2\textwidth} |}
+    \hline
+    Distance [miles] & Nissan Leaf & Tesla Model X \\
+    \hline \hline
+    Battery distance without DWPT & 149 & 360 \\
+    \hline
+    Charge with Economic Model & 185.89 & 477.14 \\
+    \hline
+    Charge with Maximum Output Model & 32.48 & 83.21 \\
+    \hline
+    \end{tabular}
+    \end{center}
+    \label{t12}
+\end{table}
+
+The maximum output model charges both the Nissan Leaf and the Tesla Model X faster than its battery depletes, 
+so if this configuration were used, cars could use the chagrining lane only when needed and any other lanes at 
+other times.  This could be beneficial because cars don’t need to be taking up space in the lane at all times.  
+For the economic model, the charging rate is not enough to allow the vehicle to travel for infinite time. 
+For the Nissan Leaf the economic model extends the battery life to about 11.2 hr and for the Tesla Model X it 
+extends it to about 21.8 hr. Further, the maximum model can charge a budget EV very quickly. Although this model 
+is not cost-efficient, the economic model still charges a budget EV at a fast enough rate to increase the range 
+of the EV. Even higher performing EVs like the Tesla Model X will benefit greatly from both the economic and 
+maximum models. The economic model provides enough power to extend both a budget and high-end electric vehicle’s 
+battery length so that it is long enough for most trips. The new battery life is longer than recommended driving 
+time for a single driver, so only trips with multiple drivers remain impacted by the range electric vehicles. 
+
+\section{Experimental Model}
+From the experiments, observations are expected to more or less confirm the results from simulation testing. 
+Ideally, the relationships discovered from simulations would appear in the experimental model data as well. 
+Furthermore, the experimental model allows for relatively quick but extensive data observation, which provides 
+insight on how to improve simulations as well. In other words, the experimental model aids with an iterative process 
+towards understanding the relationships relevant to wireless power transfer. Because the simulations provide a 
+theoretical output for charge, test cases are necessary to determine the efficiency of DWPT in real life. 
+Ultimately, the data and values collected from the experimental model would be crucial in proving the feasibility 
+of wireless power transfer.
+
+\section{Comparison to Existing Research}
+The primary goal of our research has been to contribute to the growing body of knowledge dedicated to improving 
+the efficiency and convenience of EVs. The Society of Automotive Engineering (SAE) J2954 standard is one notable 
+recent advancement in this field. This standard sets industry-wide specifications for the interoperability of 
+stationary wireless power transfer (WPT) systems in light-duty EVs. Our research can contribute to the expansion 
+of these standards in the near future. There are two major differences between SAE J2954 and the scope of our research. 
+First, SAE J2954 sets standards for stationary WPT while our research focused on dynamic WPT. 
+Second, the WPT systems described in SAE J2954 utilize AC power while we tested a system using DC power. 
+As mentioned in Section \ref{sec: s4.1}, we used some of the standards from SAE J2954 to define ranges of values of 
+the variables tested in our simulations. We found that the values that resulted in the largest possible simulated 
+charge output coincided with the standards set by the SAE, which validates our results. 
+
+When running our simulations, we made assumptions that simplified the calculations due to constraints discussed 
+in the following section. One of those assumptions was that the coils used in the DWPT system were perfectly 
+wound circular coils of a constant radius. The simulations were also run assuming perfect alignment between the 
+transmitting and receiving coils. In an analysis conducted by members of the Institute of Electrical and 
+Electronics Engineers (IEEE), it was determined that solenoid coils were “smaller, lighter, [and] more tolerant of 
+misalignment in a middle and large air gap” than circular coils \cite{fujita_dynamic_2017}. As mentioned briefly in 
+Section \ref{sec: s4.1} and in the following section, the simulation and testing of different types of 
+coils is one possible continuation of our research.

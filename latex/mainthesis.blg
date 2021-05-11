@@ -1,0 +1,61 @@
+This is BibTeX, Version 0.99d (TeX Live 2019)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: mainthesis.aux
+A level-1 auxiliary file: Abstract.aux
+A level-1 auxiliary file: Titlepage.aux
+A level-1 auxiliary file: Copyright.aux
+A level-1 auxiliary file: Acknowledgements.aux
+A level-1 auxiliary file: Abbreviations-supertabular.aux
+A level-1 auxiliary file: Chapter1.aux
+A level-1 auxiliary file: Chapter2.aux
+A level-1 auxiliary file: Chapter3.aux
+A level-1 auxiliary file: Chapter4.aux
+A level-1 auxiliary file: Chapter5.aux
+A level-1 auxiliary file: Chapter6.aux
+A level-1 auxiliary file: Chapter7.aux
+A level-1 auxiliary file: AppendixA.aux
+A level-1 auxiliary file: AppendixB.aux
+A level-1 auxiliary file: Glossary-supertabular.aux
+The style file: unsrt.bst
+Database file #1: formula.bib
+You've used 43 entries,
+            1791 wiz_defined-function locations,
+            689 strings with 12616 characters,
+and the built_in function-call counts, 9492 in all, are:
+= -- 749
+> -- 543
+< -- 3
++ -- 201
+- -- 158
+* -- 724
+:= -- 1491
+add.period$ -- 114
+call.type$ -- 43
+change.case$ -- 41
+chr.to.int$ -- 0
+cite$ -- 43
+duplicate$ -- 360
+empty$ -- 944
+format.name$ -- 158
+if$ -- 2057
+int.to.chr$ -- 0
+int.to.str$ -- 43
+missing$ -- 31
+newline$ -- 202
+num.names$ -- 38
+pop$ -- 144
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 211
+stack$ -- 0
+substring$ -- 574
+swap$ -- 66
+text.length$ -- 3
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 88
+width$ -- 45
+write$ -- 417
