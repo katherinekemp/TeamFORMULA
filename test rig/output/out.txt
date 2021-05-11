@@ -1,1 +1,0 @@
-scenarioID,i,I,R,turns,radius,R_car,turns_car,radius_car,height,spacing,velocity,totalCharge,[],[],[V],[],[],[m],[],[],[m],[m],[m],[m/s],[C],
