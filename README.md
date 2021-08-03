@@ -8,7 +8,7 @@ This simulation uses the Biot Savart Magnetic Toolbox for MATLAB to simulate a h
 Read our thesis "thesis.pdf" for detailed information on how the simulations work or view it on University of Maryland's digital repository: https://drum.lib.umd.edu/handle/1903/27070.
 
 ## Presentation
-See LINK for our final presentation.
+See https://gemstone.umd.edu/sites/default/files/2021-06/FORMULA.mp4 for our final presentation.
 
 ## Website
 See https://gemstoneformula.weebly.com/ for more information on our project.
