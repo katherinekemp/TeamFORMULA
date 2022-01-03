@@ -10,7 +10,7 @@ Read our [thesis](https://github.com/katherinekemp/TeamFORMULA/blob/main/thesis.
 See [here](https://gemstone.umd.edu/sites/default/files/2021-06/FORMULA.mp4) for our final presentation, which won the Outstanding Gemstone Team Presentation Award for our cohort.
 
 ## Website
-See [here](https://gemstoneformula.weebly.com/) for more information on our project.
+See [our website](https://gemstoneformula.weebly.com/) for more information on our project.
 
 ## References
 Queval Loic (2021). Biot Savart magnetic Toolbox [https://github.com/lqueval/BSmag](https://github.com/lqueval/BSmag), GitHub. Retrieved February 3, 2021.
