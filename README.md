@@ -14,3 +14,6 @@ See [our website](https://gemstoneformula.weebly.com/) for more information on o
 
 ## References
 Queval Loic (2021). Biot Savart magnetic Toolbox [https://github.com/lqueval/BSmag](https://github.com/lqueval/BSmag), GitHub. Retrieved February 3, 2021.
+
+---
+<a href="javascript:window.history.back();" align="center">Back</a>
